@@ -1,0 +1,22 @@
+<%= render 'shared/page_title', title: 'Enter broker information' %>
+
+<%= form_for @report, url: {action: 'new'} do |f| %>
+  
+    <%= f.label :prod_yr1, 'Annual production in Year 1:', class: 'span3 form-inline' %>
+    <%= f.text_field :prod_yr1 %></br>
+
+    <%= f.label :prod_growth_rate, 'Production anuual growth rate, %', class: 'span3 form-inline' %>
+    <%= f.text_field :prod_growth_rate %></br>
+
+    <%= f.label :timeframe, 'Years out to calculate', class: 'span3 form-inline' %>
+    <%= f.text_field :timeframe %>
+
+    <!--
+    <%= f.label :payout_yr1, 'Annual payout in Year 1:', class: 'span3 form-inline' %>
+    <%= f.text_field :payout_yr1 %>
+     -->
+  
+  <hr>
+  <%= f.submit 'Generate report', class: 'btn btn-primary btn-large' %>
+
+<% end %>

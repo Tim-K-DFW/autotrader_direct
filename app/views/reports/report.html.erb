@@ -1,0 +1,24 @@
+<%= render 'shared/page_title', title: 'Report generated!' %>
+
+<p> For reference... </p>
+<p> <%= @report.items %>
+
+
+<table class='table'>
+  <tr>
+      <th></th>
+        <% (1..@report.timeframe).each {|year| %> <th>Year <%= year %></th> <% } %>
+  </tr>
+
+  <% @report.items.each do |item| %>  
+    <tr>
+      <td>
+        <%= item[1][:name] %> 
+      </td>
+      <% item[1][:values].each do |value| %>
+        <td> <%= number_to_currency(value[1], precision: 0) %> </td>
+      <% end %>
+    </tr>
+  <% end %>
+
+</table>
