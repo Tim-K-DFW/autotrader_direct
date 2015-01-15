@@ -1,6 +1,6 @@
 PostitTemplate::Application.routes.draw do
-  root to: 'reports#index'
-  get '/new', to: 'reports#new'
-  post '/new', to: 'reports#create'
-  get '/output', to: 'reports#output'
+  root to: 'main#index'
+  get '/new', to: 'main#new'
+  post '/new', to: 'main#submit'
+  get '/output', to: 'main#results'
 end
