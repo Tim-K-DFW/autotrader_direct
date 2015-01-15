@@ -1,0 +1,36 @@
+<div id='main-table'>
+  
+
+
+  <table class='table table-striped table-hover table-condensed'>
+    <tr>
+        <th>
+          <%= link_to "Year", sort_path, data: {method: :post, remote: true, params: {results: @search.results, sort_order: 'year'}.to_param} %>
+        </th>
+        <th>Model</th>
+        <th><%= link_to "Mileage", sort_path, data: {method: :post, remote: true, params: {results: @search.results, sort_order: 'mileage'}.to_param} %>
+        </th>
+        <th><%= link_to "Price", sort_path, data: {method: :post, remote: true, params: {results: @search.results, sort_order: 'price'}.to_param} %>
+        </th>
+        <th>Link</th>       
+    </tr>
+    
+    <% binding.pry %>
+
+    <% @search.results = @search.results.sort_by {|car| car[:year].to_s }.reverse if @search.sort_order == 'year' %>
+    <% @search.results = @search.results.sort_by {|car| car[:mileage].to_s }.reverse if @search.sort_order == 'mileage' %>
+    <% @search.results = @search.results.sort_by {|car| car[:price].to_s }.reverse if @search.sort_order == 'price' %>
+    
+    <% binding.pry %>    
+
+    <% @search.results.each do |item| %>  
+        <tr>
+          <td><%= item[:year] %></td>
+          <td><%= item[:model] %></td>
+          <td><%= item[:mileage].class == Fixnum ? number_with_delimiter(item[:mileage]) : 'n/a' %></td>
+          <td><%= item[:price].class == Fixnum ? number_to_currency(item[:price], precision: 0) : 'n/a' %></td>
+          <td><a href=<%= item[:link] %> >See details</a></td>
+        </tr>
+      <% end %>
+  </table>
+</div>

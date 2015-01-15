@@ -1,24 +1,5 @@
-<%= render 'shared/page_title', title: 'Report generated!' %>
+<%= render 'shared/page_title', title: 'Search results' %>
 
-<p> For reference... </p>
-<p> <%= @report.items %>
+<h4> <%= @search.results.size %> cars found! </h4>
 
-
-<table class='table'>
-  <tr>
-      <th></th>
-        <% (1..@report.timeframe).each {|year| %> <th>Year <%= year %></th> <% } %>
-  </tr>
-
-  <% @report.items.each do |item| %>  
-    <tr>
-      <td>
-        <%= item[1][:name] %> 
-      </td>
-      <% item[1][:values].each do |value| %>
-        <td> <%= number_to_currency(value[1], precision: 0) %> </td>
-      <% end %>
-    </tr>
-  <% end %>
-
-</table>
+<%= render 'main_table' %>
