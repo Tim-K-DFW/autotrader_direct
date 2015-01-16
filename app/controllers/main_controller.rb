@@ -7,11 +7,11 @@ class MainController < ApplicationController
 
   def new
     @search = Search.new
+    @search.add_makes_list
   end
 
   def submit
     @search = Search.new(search_params)
-    
     if @search.validate
       @search.perform_search
 
@@ -25,6 +25,8 @@ class MainController < ApplicationController
     @search = Search.new
     @search.results = params[:results]
     @search.sort_order = params[:sort_order]
+    @search.sort_direction = params[:sort_direction]
+    @search.sort
     respond_to do |f|
       f.js {render 'results'}
     end

@@ -1,0 +1,24 @@
+car data stays in integer
+  in perform_search - yes
+  in template, right before rendering - integers
+    become strings when passed to sort action
+
+
+filling - wrong data
+
+
+
+
+
+Search initialized with correct search attributes       yes
+url is correct                                          no
+
+
+
+
+
+
+HAVE STACK OF unprocesses ajax requests with OLD data
+
+
+$('#main-table').replace(<%= render 'main_table' %>);

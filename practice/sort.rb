@@ -8,4 +8,7 @@ arr << item1
 arr << item2
 arr << item3
 
+p = 'price'
+y = 'year'
+
 binding.pry

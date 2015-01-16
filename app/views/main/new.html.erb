@@ -1,9 +1,8 @@
 <%= render 'shared/page_title', title: 'Enter search parameters' %>
-
 <%= form_for @search, url: {action: 'new'} do |f| %>
   
     <%= f.label :make, 'Make:', class: 'span3 form-inline' %>
-    <%= f.text_field :make %></br>
+    <%= f.select :make, options_for_select(@search.makes_list) %></br>
 
     <%= f.label :model, 'Model: ', class: 'span3 form-inline' %>
     <%= f.text_field :model %></br>
@@ -18,7 +17,7 @@
     <%= f.text_field :year_to %></br>
 
     <%= f.label :radius, 'Search radius, miles: ', class: 'span3 form-inline' %>
-    <%= f.text_field :radius %></br>
+    <%= f.select :radius, options_for_select([['10 miles', '10'], ['25 miles', '25'], ['50 miles', '50'], ['75 miles', '75']], '25') %>
 
     <hr>
   <%= f.submit 'Search', class: 'btn btn-primary btn-large' %>

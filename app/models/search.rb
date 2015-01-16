@@ -1,7 +1,7 @@
 class Search
   include ActiveModel::Model
   
-  attr_accessor :valid, :zip, :make, :model, :year_from, :year_to, :radius, :results, :sort_order
+  attr_accessor :valid, :zip, :make, :model, :year_from, :year_to, :radius, :results, :sort_order, :sort_direction, :makes_list
   
   # validates :payout_yr1, presence: true, numericality: { only_integer: true }
 
@@ -12,6 +12,8 @@ class Search
   PRICE_HANDLE = '.atcui-section.atcui-clearfix.price-offer-wrapper'
   MILEAGE_HANDLE = '.listing-mileage'
   LINK_HANDLE = '.vehicle-title.atcui-trigger'
+  MAKE_HANDLE = '#j_id_1_ac-j_id_1_ad_1-j_id_1_ad_5-j_id_1_ad_8-j_id_1_ad_f-homepageMake-selectOneMenu'
+
   
   def initialize(params = nil)
     if params
@@ -22,8 +24,27 @@ class Search
       @year_to = params[:year_to]
       @radius = params[:radius]
       @sort_order = 'price'
+      @sort_direction = 'asc'
     end
     
+  end
+
+  def add_makes_list                             # grab list of all automakers for the dropdown select
+    mech = Mechanize.new
+    page = mech.get('http://www.autotrader.com')
+    list = []
+    3.step(page.search(MAKE_HANDLE).children.size-1, 2) do |i|
+      this_entry = page.search(MAKE_HANDLE).children[i]         # next section of source makes list
+      this_element = []                                         # next element of output array
+      this_element << this_entry.children.text                  # text to display
+      this_element << this_entry.attributes["value"].value      # value to submit
+      list << this_element
+    end
+    # go through page.search(MAKE_HANDLE).children from 3 to the last, only odd indexes
+    # page.search(MAKE_HANDLE).children[5].attributes["value"].value - value to submit
+    # page.search(MAKE_HANDLE).children[5].children.text - text to display
+    # 1.step(10, 2) { |i| print "#{i} "}
+    self.makes_list = list
   end
 
   def validate
@@ -33,13 +54,11 @@ class Search
   def perform_search
     mech = Mechanize.new
     url = create_starting_url
-
-
-
     current_page = mech.get(url)
     final_results = []
     final_results << scrape_page(current_page)     # first page, since it is already loaded
     count = page_count(current_page)
+
     if count > 1
       page_links = all_page_urls(url, count)
       
@@ -50,12 +69,30 @@ class Search
     end
     final_results.flatten!
     self.results = final_results
+    
   end
 
+  def sort
+    self.sort_direction = self.sort_direction == 'asc' ? 'desc' : 'asc'         # invert
+    if self.sort_direction == 'asc'
+      if self.sort_order == 'model'
+        self.results.sort_by! {|car| car[:model] }.reverse!                           # model has to be sorted as a string
+      else
+        self.results.sort_by! {|car| car[self.sort_order.to_sym].to_i }.reverse!      # year, mileage and price sorted numerically
+      end
+    else
+      if self.sort_order == 'model'
+        self.results.sort_by! {|car| car[:model] }
+      else
+        self.results.sort_by! {|car| car[self.sort_order.to_sym].to_i }
+      end
+    end
+  end
 
   private
 
   def create_starting_url
+    
     url = INITIAL_PAGE
     url.gsub!('/Make/', '/' + self.make + '/')
     url.gsub!('/Model/', '/' + self.model + '/')
@@ -63,6 +100,7 @@ class Search
     url.gsub!('startYear=2007', 'startYear=' + self.year_from)
     url.gsub!('Radius=25', 'Radius=' + self.radius)
     url.gsub!('75207', self.zip)
+    
     return url
   end
 
@@ -78,11 +116,12 @@ class Search
       str = '&firstRecord=' + ((page_num - 1) * 100 + 1).to_s
       pages << first_url.gsub('&inGallery', str + '&inGallery')
     end
+
     return pages
   end
 
   def scrape_page(page)
-    results = []
+    this_page = []
     cars = page.search(CAR_DIV_HANDLE)
     cars.each do |car|
       this_car = {}
@@ -123,9 +162,10 @@ class Search
         this_car[:link] = 'n/a'
       end
 
-      results << this_car
+      this_page << this_car
     end
-    return results
+    
+    return this_page
   end
    
  end
