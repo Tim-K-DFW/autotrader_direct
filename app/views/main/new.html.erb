@@ -1,20 +1,22 @@
+<%= render 'shared/error_display', faulty_object: @search if @search.errors.any? %>
+
 <%= render 'shared/page_title', title: 'Enter search parameters' %>
 <%= form_for @search, url: {action: 'new'} do |f| %>
   
     <%= f.label :make, 'Make:', class: 'span3 form-inline' %>
-    <%= f.select :make, options_for_select(@search.makes_list) %></br>
-
+    <%= f.text_field :make %></br>
+    
     <%= f.label :model, 'Model: ', class: 'span3 form-inline' %>
     <%= f.text_field :model %></br>
 
     <%= f.label :zip, 'Your ZIP code', class: 'span3 form-inline' %>
     <%= f.text_field :zip %></br>
 
-    <%= f.label :year_from, 'Year, no earlier than: ', class: 'span3 form-inline' %>
-    <%= f.text_field :year_from %></br>
+    <%= f.label :beginning_year, 'Year, no earlier than: ', class: 'span3 form-inline' %>
+    <%= f.select :beginning_year, (Time.zone.now.year).downto(Time.zone.now.year - 30).to_a %></br>
 
-    <%= f.label :year_to, 'Year, no later than: ', class: 'span3 form-inline' %>
-    <%= f.text_field :year_to %></br>
+    <%= f.label :ending_year, 'Year, no later than: ', class: 'span3 form-inline' %>
+    <%= f.select :ending_year, (Time.zone.now.year).downto(Time.zone.now.year - 30).to_a %></br>
 
     <%= f.label :radius, 'Search radius, miles: ', class: 'span3 form-inline' %>
     <%= f.select :radius, options_for_select([['10 miles', '10'], ['25 miles', '25'], ['50 miles', '50'], ['75 miles', '75']], '25') %>

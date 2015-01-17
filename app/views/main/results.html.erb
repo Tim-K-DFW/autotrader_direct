@@ -1,5 +1,5 @@
 <%= render 'shared/page_title', title: 'Search results' %>
 
-<h4> <%= @search.results.size %> cars found! </h4>
+<h4><%= @search.results.size %> cars found at the ZIP code <%= @search.zip %>. </h4>
 
 <%= render 'main_table' %>

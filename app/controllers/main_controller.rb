@@ -7,21 +7,20 @@ class MainController < ApplicationController
 
   def new
     @search = Search.new
-    @search.add_makes_list
+    # @search.add_makes_list          to add drop-down make selector in the future
   end
 
   def submit
     @search = Search.new(search_params)
-    if @search.validate
+    if @search.valid?
       @search.perform_search
-
       render 'results'
     else
-      redirect_to :new
+      render 'new'
     end
   end
 
-  def sort # only triggered by ajax call, needs the results array
+  def sort                          # only triggered by ajax call, needs the results array
     @search = Search.new
     @search.results = params[:results]
     @search.sort_order = params[:sort_order]

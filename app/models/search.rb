@@ -1,11 +1,12 @@
 class Search
   include ActiveModel::Model
   
-  attr_accessor :valid, :zip, :make, :model, :year_from, :year_to, :radius, :results, :sort_order, :sort_direction, :makes_list
+  attr_accessor :valid, :zip, :make, :model, :beginning_year, :ending_year, :radius, :results, :sort_order, :sort_direction, :makes_list
   
-  # validates :payout_yr1, presence: true, numericality: { only_integer: true }
+  validates :make, :zip, :beginning_year, :ending_year, presence: true
+  validate :years_sequence
 
-  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&makeCode1=CHEV&mmt=%5BCHEV%5BMALI%5B%5D%5D%5B%5D%5D&modelCode1=MALI&numRecords=100&searchRadius=25&showcaseListingId=390538224&showcaseOwnerId=182528&sortBy=derivedpriceASC&startYear=2007&Log=0'
+  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&showcaseListingId=390538224&showcaseOwnerId=182528&sortBy=derivedpriceASC&startYear=2007&Log=0'
   PAGE_COUNT_HANDLE = '.pageof'
   CAR_DIV_HANDLE = '.listing.listing-findcar.gallery.cpo'
   TITLE_HANDLE = '.atcui-truncate.ymm'
@@ -20,16 +21,21 @@ class Search
       @zip = params[:zip]
       @make = params[:make]
       @model = params[:model]
-      @year_from = params[:year_from]
-      @year_to = params[:year_to]
+      @beginning_year = params[:beginning_year]
+      @ending_year = params[:ending_year]
       @radius = params[:radius]
       @sort_order = 'price'
       @sort_direction = 'asc'
     end
-    
   end
 
-  def add_makes_list                             # grab list of all automakers for the dropdown select
+  def years_sequence
+    if !self.nil? && self.ending_year.to_i < self.beginning_year.to_i
+      self.errors.add(:beginning_year, 'cannot be greater that ending year')
+    end
+  end
+
+  def add_makes_list          # grab list of all automakers for the dropdown select, for future use
     mech = Mechanize.new
     page = mech.get('http://www.autotrader.com')
     list = []
@@ -40,15 +46,7 @@ class Search
       this_element << this_entry.attributes["value"].value      # value to submit
       list << this_element
     end
-    # go through page.search(MAKE_HANDLE).children from 3 to the last, only odd indexes
-    # page.search(MAKE_HANDLE).children[5].attributes["value"].value - value to submit
-    # page.search(MAKE_HANDLE).children[5].children.text - text to display
-    # 1.step(10, 2) { |i| print "#{i} "}
     self.makes_list = list
-  end
-
-  def validate
-    self.valid = true
   end
 
   def perform_search
@@ -69,8 +67,7 @@ class Search
     end
     final_results.flatten!
     self.results = final_results
-    
-  end
+ end
 
   def sort
     self.sort_direction = self.sort_direction == 'asc' ? 'desc' : 'asc'         # invert
@@ -92,15 +89,15 @@ class Search
   private
 
   def create_starting_url
-    
+    self.make.gsub!(' ', '+')
+    self.model.gsub!(' ', '+')
     url = INITIAL_PAGE
     url.gsub!('/Make/', '/' + self.make + '/')
-    url.gsub!('/Model/', '/' + self.model + '/')
-    url.gsub!('endYear=2010', 'endYear=' + self.year_to)
-    url.gsub!('startYear=2007', 'startYear=' + self.year_from)
+    url.gsub!('/Model/', '/' + self.model + '/') if self.model != ''
+    url.gsub!('endYear=2010', 'endYear=' + self.ending_year)
+    url.gsub!('startYear=2007', 'startYear=' + self.beginning_year)
     url.gsub!('Radius=25', 'Radius=' + self.radius)
     url.gsub!('75207', self.zip)
-    
     return url
   end
 
@@ -140,7 +137,7 @@ class Search
         this_car[:price] = 'n/a'
       end
 
-      model_match = /\d{4}\s+([a-zA-Z0-9\s]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
+      model_match = /\d{4}\s+([a-zA-Z0-9\-\s]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
       if model_match
         # this_car[:model] = model_match[1].gsub!(self.make + ' ' + self.model + ' ', '')
         this_car[:model] = model_match[1]

@@ -11,7 +11,7 @@
         </th>
         <th><%= link_to "Price", sort_path, data: {method: :post, remote: true, params: {results: @search.results, sort_order: 'price', sort_direction: @search.sort_direction}.to_param} %>
         </th>
-        <th>Link</th>       
+        <th></th>       
     </tr>
 
     <% @search.results.each do |item| %>  
