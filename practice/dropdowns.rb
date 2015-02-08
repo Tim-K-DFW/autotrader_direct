@@ -9,10 +9,10 @@ PRICE_HANDLE = '.atcui-section.atcui-clearfix.price-offer-wrapper'
 MILEAGE_HANDLE = '.listing-mileage'       # (\d*,*\d+)\s+miles
 LINK_HANDLE = '.vehicle-title.atcui-trigger'
 MAKE_HANDLE = '#j_id_1_ac-j_id_1_ad_1-j_id_1_ad_5-j_id_1_ad_8-j_id_1_ad_f-homepageMake-selectOneMenu'
+MODEL_HANDLE ="#j_id_1_ac-j_id_1_ad_1-j_id_1_ad_5-j_id_1_ad_8-j_id_1_ad_f-homepageModel-selectOneMenu"
 
 MAKE = 'Chevrolet'
 MODEL = 'Camaro'
-
 
 
 def create_starting_url(params)
