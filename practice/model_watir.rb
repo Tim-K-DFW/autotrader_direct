@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'watir-webdriver'
 require 'pry'
 
 INITIAL_PAGE = 'http://www.autotrader.com/'
@@ -45,11 +46,13 @@ HEADERS = { 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*
 MODEL_HANDLE = '#j_id_1_ac-j_id_1_ad_1-j_id_1_ad_5-j_id_1_ad_8-j_id_1_ad_f-homepageModel-selectOneMenu'
 MODEL_HANDLE2 = '.atcui-selectOneMenu-styled'
 
+# mech = Mechanize.new
+# url = INITIAL_PAGE
+# test = mech.post(url, FORM_DATA, HEADERS)
 
-mech = Mechanize.new
-url = INITIAL_PAGE
-mech.get(url)
-HEADERS.merge!({'Cookie' => mech.cookies.map{ |c| c.to_s }.join('; ')})
-test = mech.post(url, FORM_DATA, HEADERS)
+
+b = Watir::Browser.new
+b.goto INITIAL_PAGE
+b.select_list(:id => MAKE_SELECT_FIELD).select 'BMW'
 
 binding.pry
