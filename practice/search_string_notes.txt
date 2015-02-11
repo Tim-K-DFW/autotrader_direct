@@ -1,0 +1,86 @@
+http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&showcaseListingId=390538224&showcaseOwnerId=182528&sortBy=derivedpriceASC&startYear=2007&Log=0
+
+
+organic
+
+http://www.autotrader.com/cars-for-sale/Mercedes-Benz/Plano+TX-75024?endYear=2016&makeCode1=MB&mmt=%5BMB%5B%5D%5BS_CLASS%5B%5D%5D%5D&modelCode1=S_CLASS&searchRadius=10&showcaseOwnerId=56666255&startYear=1981&Log=0&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+http://www.autotrader.com/cars-for-sale/Mercedes-Benz/S550/Plano+TX-75024?endYear=2016&makeCode1=MB&mmt=%5BMB%5BS550%5B%5D%5D%5B%5D%5D&modelCode1=S550&searchRadius=10&showcaseOwnerId=56666255&startYear=1981&Log=0&showcaseListingId=388505452&showcaseOwnerId=56666255&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+
+http://www.autotrader.com/cars-for-sale/Nissan/Altima/Plano+TX-75024?endYear=2016&makeCode1=NISSAN&mmt=%5BNISSAN%5BALTIMA%5B%5D%5D%5B%5D%5D&modelCode1=ALTIMA&searchRadius=10&showcaseOwnerId=53500894&startYear=1981&Log=0&showcaseListingId=390474911&showcaseOwnerId=53500894&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+
+http://www.autotrader.com/cars-for-sale/BMW/Plano+TX-75024?endYear=2016&makeCode1=BMW&mmt=%5BBMW%5B%5D%5B6_SERIES%5B%5D%5D%5D&modelCode1=6_SERIES&searchRadius=10&showcaseOwnerId=56666255&startYear=1981&Log=0&showcaseListingId=389888652&showcaseOwnerId=56666255&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+http://www.autotrader.com/cars-for-sale/BMW/650i/Plano+TX-75024?endYear=2016&makeCode1=BMW&mmt=%5BBMW%5B650I%5B%5D%5D%5B%5D%5D&modelCode1=650I&searchRadius=10&showcaseOwnerId=56666255&startYear=1981&Log=0&showcaseListingId=389888652&showcaseOwnerId=56666255&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+
+
+http://www.autotrader.com/cars-for-sale/Nissan/Plano+TX-75024?endYear=2016&mmt=%5BNISSAN%5BALTIMA%5B%5D%5D%5B%5D%5D&searchRadius=10&showcaseOwnerId=53500894&startYear=1981&Log=0&showcaseListingId=390474911&showcaseOwnerId=53500894&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+http://www.autotrader.com/cars-for-sale/BMW/740Ld+xDrive/Plano+TX-75024?endYear=2016&makeCode1=BMW&mmt=%5BBMW%5BBMW740LDXD%5B%5D%5D%5B%5D%5D&modelCode1=BMW740LDXD&searchRadius=10&showcaseOwnerId=56666255&startYear=1981&Log=0&showcaseOwnerId=56666255&captureSearch=true&fromSIP=42E0A090B4C631849EBB6C1E2DFD12F2&showToolbar=true&Log=0
+
+
+
+BASIS url
+http://www.autotrader.com/cars-for-sale/MAKE-FILL/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&mmt=MMT-FILL&searchRadius=25&sortBy=derivedpriceASC&startYear=2007&Log=0
+
+URL TAKEAWAYS
+
+1. make and model after 'cars-for-sale' dominate whatever codes follow
+1. without make and model all cars show up => NEED MAKE
+1. url make matches selection text, except for 6 makes (below) => replace them manually
+1. with make but without model, mmt works correctly
+2. model in firt param is not required, as long as it is in mmt
+2. `showcaseOwnerId` can be removed
+3. `modelCode` can be removed
+6. `makeCode1` can be removed
+7. `fromSP` can be removed
+8. if first make and model contradict `mmt`, both show
+9. `mmt` can be removed if make and model are set, but better keep it there
+
+CONFIRM
+
+1. make in url matches value in table (especially for complex names)
+  
+  selection         URL
+  ----------------------------------
+  Aston Martin      Aston+Martin
+  Cadillac          Cadillac
+  Mercedes-Benz     Mercedes-Benz
+  Land Rover        Land+Rover
+  Alfa Romeo        Alfa+Romeo
+  Rolls-Royce       Rolls-Royce
+
+
+
+
+http://www.autotrader.com/cars-for-sale/BMW/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&mmt=%5BBMW%5B650I%5B%5D%5D%5B%5D%5D&searchRadius=25&sortBy=derivedpriceASC&startYear=2007&Log=0
+
+
+mmt=[BMW[][6_SERIES[]]]
+mmt=[BMW[650I[]][]]
+
+MMT
+
+for series:
+mmt=%5BBMW%5B%5D%5B6_SERIES%5B%5D%5D%5D
+for model:
+mmt=%5BBMW%5B650I%5B%5D%5D%5B%5D%5D
+
+
+%20 is space
+%5B is '['
+and %5D is ']'
+
+s-class:      mmt=[MB[][S_CLASS[]]]
+6 series:     mmt=[BMW[][6_SERIES[]]]
+S550:         mmt=[MB[S550[]][]]
+650           mmt=[BMW[650I[]][]]
+BMW M3:       mmt=[BMW[M3[]][]]
+BMW i8:       mmt=[BMW   [BMWI8 []][]]
+altima:       mmt=[NISSAN[ALTIMA[]][]]
+BMW M3:       mmt=[BMW[M3[]][]
+
+SOLUTION
+
+1. to unify, need to have
+  make in first params
+  proper mmt param string
+2. need to pull codes from organic dropdowns
+  remove dashes from strings
