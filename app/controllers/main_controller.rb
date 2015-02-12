@@ -7,7 +7,6 @@ class MainController < ApplicationController
 
   def new
     @search = Search.new
-    # @search.add_makes_list          to add drop-down make selector in the future
   end
 
   def submit
@@ -28,6 +27,14 @@ class MainController < ApplicationController
     @search.sort
     respond_to do |f|
       f.js {render 'results'}
+    end
+  end
+
+  def models            # only triggered by ajax call
+    @search = Search.new
+    @make = params[:make]
+    respond_to do |f|
+      f.js {render 'models'}
     end
   end
 

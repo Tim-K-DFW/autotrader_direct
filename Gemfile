@@ -20,8 +20,15 @@ end
 
 group :development do
   gem 'quiet_assets'
-  gem 'pry'
   gem 'sqlite3'
+end
+
+group :development, :test do
+  gem 'pry'
+  gem 'pry-nav'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers', require: false
+  gem 'capybara'
 end
 
 group :production do

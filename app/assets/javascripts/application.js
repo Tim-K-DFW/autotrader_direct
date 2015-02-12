@@ -15,4 +15,4 @@
 //= require turbolinks
 //= require_tree .
 //= require bootstrap
-
+//= require model_pull
