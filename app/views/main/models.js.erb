@@ -1,1 +1,1 @@
-$('#search_model').replaceWith('<%= j select_tag(:model, options_for_select([@model])) %>');
+$('#search_model').replaceWith('<%= j select_tag(:model, options_for_select(models_list(@make)), id: "search_model") %>');

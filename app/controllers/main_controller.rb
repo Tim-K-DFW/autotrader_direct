@@ -32,7 +32,7 @@ class MainController < ApplicationController
   end
 
   def models            # only triggered by ajax call
-    @model = params[:make]
+    @make = params[:make]
     respond_to do |f|
       f.js {render 'models'}
     end

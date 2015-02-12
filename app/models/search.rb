@@ -6,7 +6,7 @@ class Search
   validates :make, :zip, :beginning_year, :ending_year, presence: true
   validate :years_sequence
 
-  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&showcaseListingId=390538224&showcaseOwnerId=182528&sortBy=derivedpriceASC&startYear=2007&Log=0'
+  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&sortBy=derivedpriceASC&startYear=2007&Log=0'
   PAGE_COUNT_HANDLE = '.pageof'
   CAR_DIV_HANDLE = '.listing.listing-findcar.gallery.cpo'
   TITLE_HANDLE = '.atcui-truncate.ymm'
@@ -86,7 +86,7 @@ class Search
     end
   end
 
-  private
+  # private
 
   def create_starting_url
     self.make.gsub!(' ', '+')
@@ -98,6 +98,8 @@ class Search
     url.gsub!('startYear=2007', 'startYear=' + self.beginning_year)
     url.gsub!('Radius=25', 'Radius=' + self.radius)
     url.gsub!('75207', self.zip)
+    mmt = '%5BHONDA%5BACCORD%5B%5D%5D%5B%5D%5D'
+    url.gsub!('=100&search', "=100&mmt=#{mmt}&search")
     return url
   end
 
