@@ -4,7 +4,7 @@
 <%= form_for @search, url: {action: 'new'} do |f| %>
   
     <%= f.label :make, 'Make:', class: 'span3 form-inline' %>
-    <%= f.select :make, options_for_select(makes_list) %></br>
+    <%= f.select :make, options_for_select(@search.makes_list) %></br>
 
     <%= f.label :model, 'Model: ', class: 'span3 form-inline' %>
     <%= f.select :model, options_for_select([]) %></br>
