@@ -4,4 +4,5 @@ PostitTemplate::Application.routes.draw do
   post '/new', to: 'main#submit'
   get '/output', to: 'main#results'
   post '/sort', to: 'main#sort'
+  post '/models', to: 'main#models'
 end

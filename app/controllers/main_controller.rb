@@ -31,6 +31,13 @@ class MainController < ApplicationController
     end
   end
 
+  def models            # only triggered by ajax call
+    @model = params[:make]
+    respond_to do |f|
+      f.js {render 'models'}
+    end
+  end
+
   private
 
     def search_params
