@@ -22,9 +22,3 @@ str.each do |make|
 end
 
 binding.pry
-
-
-
-# output is array of hashes => make it hash of hashes
-#  cannot merge hashes with identical keys
-# each make is a hash = GOOD

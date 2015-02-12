@@ -18,8 +18,7 @@ class Search
 
   
   def initialize(params = nil)
-    binding.pry
-    Search::INITIAL_PAGE.freeze
+    Search::INITIAL_PAGE
     if params
       @zip = params[:zip]
       @make = params[:make]
@@ -104,7 +103,7 @@ class Search
       full_list << this_make
     end
 
-    select_html = []
+    select_html = [['--Any model', 'ANY']]
     models_hash = full_list.select{|m| m[:code] == make}.first[:models]
     models_hash.each do |model|
       this_model = []
@@ -117,24 +116,25 @@ class Search
 
   def create_starting_url
     self.make.gsub!(' ', '+')
-    url = Search::INITIAL_PAGE
+    url = Search::INITIAL_PAGE.dup    # for some reason, with simple assginment gsub! tried to mutate the constant
     url.gsub!('/Make/', '/' + self.make + '/')
     url.gsub!('endYear=2010', 'endYear=' + self.ending_year)
     url.gsub!('startYear=2007', 'startYear=' + self.beginning_year)
     url.gsub!('Radius=25', 'Radius=' + self.radius)
     url.gsub!('75207', self.zip)
     url.gsub!('=100&search', "=100&mmt=#{mmt(self.make, self.model)}&search")
-    binding.pry
     return url
   end
 
   def mmt(make, model)
     models = models_list(make)
     model_name = models.select{|m| m[1] == model}.first[0]
-    if /\(\d+\)$/.match(model_name)
-      mmt = "%5B#{make}%5B%5D%5B#{model}%5B%5D%5D%5D"  # series mmt
+    if /Any model/.match(model_name)                  
+      mmt="%5B#{make}%5B%5D%5B%5D%5D"                  # any model of this make
+    elsif /\(\d+\)$/.match(model_name)
+      mmt = "%5B#{make}%5B%5D%5B#{model}%5B%5D%5D%5D"  # series
     else
-      mmt = "%5B#{make}%5B#{model}%5B%5D%5D%5B%5D%5D"  # regular mmt
+      mmt = "%5B#{make}%5B#{model}%5B%5D%5D%5B%5D%5D"  # specific model
     end
     return mmt
   end
@@ -175,7 +175,7 @@ class Search
         this_car[:price] = 'n/a'
       end
 
-      model_match = /\d{4}\s+([a-zA-Z0-9\-\s]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
+      model_match = /\d{4}\s+([a-zA-Z0-9\-\s\&;]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
       if model_match
         # this_car[:model] = model_match[1].gsub!(self.make + ' ' + self.model + ' ', '')
         this_car[:model] = model_match[1]
