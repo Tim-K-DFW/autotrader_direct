@@ -1,5 +1,3 @@
+This is a simple but powerful and time-saving scraper for Autotrader.com.
+
 The app is deployed at https://murmuring-wave-4290.herokuapp.com/.
-
-It works on simple one-word makes and models (e.g. "Honda Civic") but trips on series (e.g. "Mercedes CLS Class"). I will finally fix it (add drop-down selects for Make and Model which should eliminate the bug) sometime in February or March.
-
-Currently I'm focused entirely on the Rails course...
