@@ -4,19 +4,19 @@
 <%= form_for @search, url: {action: 'new'} do |f| %>
   
     <%= f.label :make, 'Make:', class: 'span3 form-inline' %>
-    <%= f.text_field :make %></br>
-    
+    <%= f.select :make, options_for_select(@search.makes_list) %></br>
+
     <%= f.label :model, 'Model: ', class: 'span3 form-inline' %>
-    <%= f.text_field :model %></br>
+    <%= f.select :model, options_for_select(@search.models_list('ACURA')) %></br>
 
     <%= f.label :zip, 'Your ZIP code', class: 'span3 form-inline' %>
     <%= f.text_field :zip %></br>
 
     <%= f.label :beginning_year, 'Year, no earlier than: ', class: 'span3 form-inline' %>
-    <%= f.select :beginning_year, (Time.zone.now.year).downto(Time.zone.now.year - 30).to_a %></br>
+    <%= f.select :beginning_year, (Time.zone.now.year + 1).downto(Time.zone.now.year - 30).to_a %></br>
 
     <%= f.label :ending_year, 'Year, no later than: ', class: 'span3 form-inline' %>
-    <%= f.select :ending_year, (Time.zone.now.year).downto(Time.zone.now.year - 30).to_a %></br>
+    <%= f.select :ending_year, (Time.zone.now.year + 1).downto(Time.zone.now.year - 30).to_a %></br>
 
     <%= f.label :radius, 'Search radius, miles: ', class: 'span3 form-inline' %>
     <%= f.select :radius, options_for_select([['10 miles', '10'], ['25 miles', '25'], ['50 miles', '50'], ['75 miles', '75']], '25') %>

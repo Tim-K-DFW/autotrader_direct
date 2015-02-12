@@ -1,4 +1,5 @@
 class Search
+  require 'csv'
   include ActiveModel::Model
   
   attr_accessor :valid, :zip, :make, :model, :beginning_year, :ending_year, :radius, :results, :sort_order, :sort_direction, :makes_list
@@ -6,7 +7,7 @@ class Search
   validates :make, :zip, :beginning_year, :ending_year, presence: true
   validate :years_sequence
 
-  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Model/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&showcaseListingId=390538224&showcaseOwnerId=182528&sortBy=derivedpriceASC&startYear=2007&Log=0'
+  INITIAL_PAGE = 'http://www.autotrader.com/cars-for-sale/Make/Dallas+TX-75207?endYear=2010&inGalleryView=true&numRecords=100&searchRadius=25&sortBy=derivedpriceASC&startYear=2007&Log=0'
   PAGE_COUNT_HANDLE = '.pageof'
   CAR_DIV_HANDLE = '.listing.listing-findcar.gallery.cpo'
   TITLE_HANDLE = '.atcui-truncate.ymm'
@@ -17,6 +18,7 @@ class Search
 
   
   def initialize(params = nil)
+    Search::INITIAL_PAGE
     if params
       @zip = params[:zip]
       @make = params[:make]
@@ -27,26 +29,13 @@ class Search
       @sort_order = 'price'
       @sort_direction = 'asc'
     end
+    @makes_list = makes_list
   end
 
   def years_sequence
     if !self.nil? && self.ending_year.to_i < self.beginning_year.to_i
       self.errors.add(:beginning_year, 'cannot be greater that ending year')
     end
-  end
-
-  def add_makes_list          # grab list of all automakers for the dropdown select, for future use
-    mech = Mechanize.new
-    page = mech.get('http://www.autotrader.com')
-    list = []
-    3.step(page.search(MAKE_HANDLE).children.size-1, 2) do |i|
-      this_entry = page.search(MAKE_HANDLE).children[i]         # next section of source makes list
-      this_element = []                                         # next element of output array
-      this_element << this_entry.children.text                  # text to display
-      this_element << this_entry.attributes["value"].value      # value to submit
-      list << this_element
-    end
-    self.makes_list = list
   end
 
   def perform_search
@@ -86,19 +75,68 @@ class Search
     end
   end
 
-  private
+  # private
+
+  def makes_list
+    CSV.read('app/helpers/makes.csv')
+  end
+
+  def models_list(make)
+    full_list = []
+    str = File.read('app/helpers/all_models.txt').split(/\r\n/)
+    str.each do |make|
+      this_make = {}
+      this_make[:code] = /^(.+)&&/.match(make)[1]
+      models = make.scan(/<option value=("[^<]+<)\/option>/)
+      this_make[:models] = []
+      models.each do |model|
+        this_model = {}
+        this_model[:code] = /"([^\\\/]+).+">/.match(model.to_s)[1]
+        this_model[:name] = />([^<>]+)</.match(model.to_s)[1]
+        if /\(\d+\)$/.match(this_model[:name])
+          this_model[:is_series] = true
+        else
+          this_model[:is_series] = false
+        end
+        this_make[:models] << this_model if (this_model[:name] != 'Any Model' && /Other.+Models/.match(this_model[:name]).nil?)
+      end
+      full_list << this_make
+    end
+
+    select_html = [['--Any model', 'ANY']]
+    models_hash = full_list.select{|m| m[:code] == make}.first[:models]
+    models_hash.each do |model|
+      this_model = []
+      this_model << model[:name]
+      this_model << model[:code]
+      select_html << this_model
+    end
+    return select_html
+  end
 
   def create_starting_url
     self.make.gsub!(' ', '+')
-    self.model.gsub!(' ', '+')
-    url = INITIAL_PAGE
+    url = Search::INITIAL_PAGE.dup    # for some reason, with simple assginment gsub! tried to mutate the constant
     url.gsub!('/Make/', '/' + self.make + '/')
-    url.gsub!('/Model/', '/' + self.model + '/') if self.model != ''
     url.gsub!('endYear=2010', 'endYear=' + self.ending_year)
     url.gsub!('startYear=2007', 'startYear=' + self.beginning_year)
     url.gsub!('Radius=25', 'Radius=' + self.radius)
     url.gsub!('75207', self.zip)
+    url.gsub!('=100&search', "=100&mmt=#{mmt(self.make, self.model)}&search")
     return url
+  end
+
+  def mmt(make, model)
+    models = models_list(make)
+    model_name = models.select{|m| m[1] == model}.first[0]
+    if /Any model/.match(model_name)                  
+      mmt="%5B#{make}%5B%5D%5B%5D%5D"                  # any model of this make
+    elsif /\(\d+\)$/.match(model_name)
+      mmt = "%5B#{make}%5B%5D%5B#{model}%5B%5D%5D%5D"  # series
+    else
+      mmt = "%5B#{make}%5B#{model}%5B%5D%5D%5B%5D%5D"  # specific model
+    end
+    return mmt
   end
 
   def page_count(page)
@@ -137,7 +175,7 @@ class Search
         this_car[:price] = 'n/a'
       end
 
-      model_match = /\d{4}\s+([a-zA-Z0-9\-\s]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
+      model_match = /\d{4}\s+([a-zA-Z0-9\-\s\&;]+[a-zA-Z0-9])/.match(car.search(TITLE_HANDLE).text)
       if model_match
         # this_car[:model] = model_match[1].gsub!(self.make + ' ' + self.model + ' ', '')
         this_car[:model] = model_match[1]
