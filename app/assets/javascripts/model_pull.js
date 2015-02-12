@@ -6,8 +6,11 @@ $(document).on('change', '#search_make', function(){
 });
 
 $(document).on('ready', function(){
-  $.ajax({
-    type: 'POST',
-    url: '/models',
-    data: {make: $('#search_make').val()}});
+  if ($('#search_make').length)
+  {
+    $.ajax({
+      type: 'POST',
+      url: '/models',
+      data: {make: $('#search_make').val()}});
+  };
 });
