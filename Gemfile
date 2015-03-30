@@ -13,6 +13,8 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem 'mechanize'
+gem 'figaro'
+gem 'sentry'
 
 group :doc do
   gem 'sdoc', require: false
