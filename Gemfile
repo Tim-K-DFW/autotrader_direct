@@ -14,7 +14,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 gem 'mechanize'
 gem 'figaro'
-gem 'sentry'
+gem 'sentry-raven'
 
 group :doc do
   gem 'sdoc', require: false
