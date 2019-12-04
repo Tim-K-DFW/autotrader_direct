@@ -1,3 +1,5 @@
 *was deployed on Heroku, inactive as of 2019*
 
 This is a simple but powerful and time-saving scraper for Autotrader.com.
+
+Was developed during the Ruby-on-Rails course, before I learned about OOP.
